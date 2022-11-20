@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="left-form" stylesheets="@loginDesign.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.HelloController">
+    <children>
+        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="300.0" styleClass="left-form" stylesheets="@loginDesign.css">
+            <children>
+                <TextField fx:id="tfUserName" layoutX="76.0" layoutY="133.0" promptText="Username" styleClass="textfield" />
+                <Button fx:id="btnLogin" layoutX="45.0" layoutY="250.0" mnemonicParsing="false" onAction="#setBtnLogin" prefHeight="30.0" prefWidth="65.0" styleClass="login-btn" text="Login" />
+                <Button fx:id="btnExit" layoutX="205.0" layoutY="250.0" mnemonicParsing="false" onAction="#setBtnExit" prefHeight="26.0" prefWidth="57.0" styleClass="close" stylesheets="@loginDesign.css" text="Exit" />
+                <Label layoutX="20.0" layoutY="63.0" text="Member Management System" textFill="#3fe4e4">
+                    <font>
+                        <Font size="20.0" />
+                    </font>
+               <effect>
+                  <Glow level="0.96">
+                     <input>
+                        <Lighting>
+                           <bumpInput>
+                              <GaussianBlur />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant>
+                                 <color>
+                                    <Color red="0.22697368264198303" green="0.7717105150222778" blue="0.9078947305679321" />
+                                 </color>
+                              </Light.Distant>
+                           </light>
+                        </Lighting>
+                     </input>
+                  </Glow>
+               </effect>
+                </Label>
+                <Separator layoutX="66.0" layoutY="323.0" prefHeight="26.0" prefWidth="178.0" />
+                <Separator layoutX="125.0" layoutY="310.0" prefHeight="26.0" prefWidth="65.0" />
+                <Label fx:id="msgLoginInvalid" layoutX="77.0" layoutY="288.0" prefHeight="22.0" prefWidth="178.0" textFill="#ff4646">
+                    <font>
+                        <Font name="Bell MT Bold" size="18.0" />
+                    </font>
+                </Label>
+            <PasswordField fx:id="pwPassword" layoutX="76.0" layoutY="187.0" promptText="Password" styleClass="textfield" />
+            <Label fx:id="msgLoginInvalid2" layoutX="115.0" layoutY="291.0" textFill="#ff4646" />
+            </children>
+        </AnchorPane>
+        <AnchorPane layoutX="300.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="300.0" styleClass="right-form" stylesheets="@loginDesign.css">
+            <children>
+                <ImageView fitHeight="300.0" fitWidth="300.0" layoutX="1.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@Untitled design.png" />
+                    </image>
+                </ImageView>
+            </children>
+        </AnchorPane>
+    </children>
+</AnchorPane>
