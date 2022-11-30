@@ -104,7 +104,6 @@ public class Dashboard {
         String Mobile = tfmobile.getText();
         String UID = tfuid.getText();
         String BloodGroup = tfbloodgroup.getText();
-        System.out.println(FullName);
 
         String insertFields = "INSERT INTO member_info(FullName, Email, UID, Mobile, BloodGroup) VALUES('";
         String insertValues = FullName + "','" + Email + "','" + Mobile + "','" + UID + "','" + BloodGroup + "')";
