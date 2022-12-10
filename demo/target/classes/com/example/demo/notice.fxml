@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.demo.Notice"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="left-form" stylesheets="@loginDesign.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.Notice">
+   <children>
+      <Text layoutX="208.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Notice" wrappingWidth="183.13671875">
+         <font>
+            <Font name="Bell MT Bold" size="62.0" />
+         </font>
+         <fill>
+            <LinearGradient endX="0.7677725118483413" endY="0.7345971563981042" startX="0.2796208530805687" startY="0.1800947867298578">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.21929824352264404" green="0.30423977971076965" blue="0.9473684430122375" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.8684210777282715" green="0.18494151532649994" blue="0.18494151532649994" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Text>
+      <Button fx:id="btnHome" layoutX="235.0" layoutY="323.0" mnemonicParsing="false" onAction="#setBtnHome" prefHeight="40.0" prefWidth="75.0" styleClass="login-btn" text="Home" />
+      <Button fx:id="btnClose" layoutX="310.0" layoutY="323.0" mnemonicParsing="false" onAction="#setBtnClose" prefHeight="40.0" prefWidth="75.0" styleClass="close" text="Close" />
+   </children>
 </AnchorPane>

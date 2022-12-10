@@ -6,18 +6,17 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="left-form" stylesheets="@loginDesign.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.Dashboard1">
    <children>
-      <Button layoutX="357.0" layoutY="75.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="194.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Member List" />
+      <Button fx:id="memberList" layoutX="357.0" layoutY="75.0" mnemonicParsing="false" onAction="#setMemberList" prefHeight="40.0" prefWidth="194.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Member List" />
       <ButtonBar layoutX="208.0" layoutY="200.0" prefHeight="40.0" prefWidth="200.0" />
       <ImageView fitHeight="269.0" fitWidth="236.0" layoutX="64.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Untitled design.png" />
          </image>
       </ImageView>
-      <Button layoutX="357.0" layoutY="141.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="194.0" styleClass="login-btn" text="Notice" />
-      <Button layoutX="357.0" layoutY="271.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="194.0" styleClass="close" text="Exit" />
-      <Button layoutX="357.0" layoutY="206.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="194.0" styleClass="login-btn" text="Important Links" />
+      <Button fx:id="notice" layoutX="357.0" layoutY="141.0" mnemonicParsing="false" onAction="#setNotice" prefHeight="40.0" prefWidth="194.0" styleClass="login-btn" text="Notice" />
+      <Button fx:id="exit" layoutX="357.0" layoutY="271.0" mnemonicParsing="false" onAction="#setexit" prefHeight="40.0" prefWidth="194.0" styleClass="close" text="Exit" />
+      <Button fx:id="importantLinks" layoutX="357.0" layoutY="206.0" mnemonicParsing="false" onAction="#setImportantLinks" prefHeight="40.0" prefWidth="194.0" styleClass="login-btn" text="Important Links" />
    </children>
 </AnchorPane>

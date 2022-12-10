@@ -1,8 +1,13 @@
 package com.example.demo;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -11,10 +16,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 
-public class Dashboard {
+public class Dashboard implements Initializable {
     //Button
     @FXML
     private Button btnClose;
@@ -29,9 +36,11 @@ public class Dashboard {
     private TextField tfmobile;
     @FXML
     private TextField tfbloodgroup;
+    @FXML
+    private TextField search;
     //Table
     @FXML
-    private TableView<table> table;
+    private TableView<table> tableView;
     //Table Columns
     @FXML
     private TableColumn<table, String> nameColumn;
@@ -42,15 +51,17 @@ public class Dashboard {
     @FXML
     private TableColumn<table, Integer> mobileColumn;
     @FXML
-    private TableColumn<table, String> bloodgroup;
+    private TableColumn<table, String> bloodgroupColumn;
 
-    public void initialize(URL url, ResourceBundle resourceBundle){
-        nameColumn.setCellValueFactory(new PropertyValueFactory<table, String>("name"));
-        emailColumn.setCellValueFactory(new PropertyValueFactory<table, String>("email"));
-        uidColumn.setCellValueFactory(new PropertyValueFactory<table, Integer>("uid"));
-        mobileColumn.setCellValueFactory(new PropertyValueFactory<table, Integer>("mobile"));
-        bloodgroup.setCellValueFactory(new PropertyValueFactory<table, String>("bloodgroup"));
+    public Connection getConnection(){
+        try {
+            DatabaseConnection connectNow = new DatabaseConnection();
+            Connection con = connectNow.getDblink();
+            return con;
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //Close button action method.
@@ -71,7 +82,7 @@ public class Dashboard {
     }
 
     public void setBtnHome(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("dashboard1.fxml"));
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load(), 600, 400);
@@ -85,19 +96,137 @@ public class Dashboard {
         close();
     }
 
+    public void btnSearchAction(ActionEvent event){
+    filteredList();
+    }
+
     public void btnDeleteAlert(ActionEvent event) {
+        //Confirmation Alert.
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete");
         alert.setHeaderText("Delete this member from the list?");
         alert.setContentText("Are you sure?");
 
         if (alert.showAndWait().get() == ButtonType.OK) {
+
+
+        //Database Connection
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection con = connectNow.getDblink();
+
+        String FullName = tffullname.getText();
+
+        String insertFields = "DELETE FROM `login`.`member_info` WHERE (`FullName` = '" + FullName + "');";
+
+        executeQuery(insertFields);
+        showList();
+        tfClear();
+
+
+        try{
+            Statement statement = con.createStatement();
+            statement.executeUpdate(insertFields);
+        }catch (Exception e){
+            e.printStackTrace();
+            e.getCause();
+        }
+        }
+    }
+    //Used in showList()
+    public ObservableList<table> getList(){
+        ObservableList<table> list = FXCollections.observableArrayList();
+
+        DatabaseConnection connectNow = new DatabaseConnection();
+
+        Connection con = connectNow.getDblink();
+
+        String query = "select `FullName`, `UID`, `Email`,`Mobile`, `BloodGroup` from member_info";
+
+        Statement st;
+        ResultSet rs;
+
+        try {
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            table tv;
+            while (rs.next()){
+                tv = new table(rs.getString("FullName"), rs.getInt("UID"), rs.getString("Email"), rs.getInt("Mobile"), rs.getString("BloodGroup"));
+                list.add(tv);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+            return list;
+    }
+    public void showList(){
+        ObservableList<table> list = getList();
+
+        nameColumn.setCellValueFactory(new PropertyValueFactory<table, String>("name"));
+        emailColumn.setCellValueFactory(new PropertyValueFactory<table, String>("email"));
+        mobileColumn.setCellValueFactory(new PropertyValueFactory<table, Integer>("mobile"));
+        uidColumn.setCellValueFactory(new PropertyValueFactory<table, Integer>("uid"));
+        bloodgroupColumn.setCellValueFactory(new PropertyValueFactory<table, String>("bloodGroup"));
+
+        tableView.setItems(list);
+    }
+
+    public void filteredList(){
+        DatabaseConnection connectNow = new DatabaseConnection();
+        Connection con = connectNow.getDblink();
+
+        ObservableList<table> list = getList();
+
+        nameColumn.setCellValueFactory(new PropertyValueFactory<table, String>("name"));
+        emailColumn.setCellValueFactory(new PropertyValueFactory<table, String>("email"));
+        mobileColumn.setCellValueFactory(new PropertyValueFactory<table, Integer>("mobile"));
+        uidColumn.setCellValueFactory(new PropertyValueFactory<table, Integer>("uid"));
+        bloodgroupColumn.setCellValueFactory(new PropertyValueFactory<table, String>("bloodGroup"));
+
+        tableView.setItems(list);
+
+        FilteredList<table> filteredData = new FilteredList<>(list, b -> true);
+
+        search.textProperty().addListener((observable, oldvalue, newvalue) -> {
+            filteredData.setPredicate(table -> {
+                if (newvalue.isEmpty() || newvalue.isBlank() || newvalue == null ){
+                    return true;
+                };
+
+                String searchKeyword = newvalue.toLowerCase();
+
+                if (table.getName().toLowerCase().indexOf(searchKeyword) != -1){
+                    return true;
+                } else if (table.getEmail().toLowerCase().indexOf(searchKeyword) != -1) {
+                    return true;
+                } else if (table.getBloodGroup().toLowerCase().indexOf(searchKeyword) != -1) {
+                    return true;
+                } else if (table.getUid().toString().indexOf(searchKeyword) != -1) {
+                    return true;
+                } else if (table.getMobile().toString().indexOf(searchKeyword) != -1) {
+                    return true;
+                } else
+                    return false;
+            });
+        });
+
+        SortedList<table> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(tableView.comparatorProperty());
+        tableView.setItems(sortedData);
+    }
+    private void executeQuery(String query) {
+        Connection con = getConnection();
+        Statement st;
+        try{
+            st = con.createStatement();
+            st.executeUpdate(query);
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
     }
 
     public void setBtnAdd(ActionEvent event){
         DatabaseConnection connectNow = new DatabaseConnection();
-        Connection con = connectNow.getDbLink2();
+        Connection con = connectNow.getDblink();
 
         String FullName = tffullname.getText();
         String Email = tfemail.getText();
@@ -105,10 +234,21 @@ public class Dashboard {
         String UID = tfuid.getText();
         String BloodGroup = tfbloodgroup.getText();
 
-        String insertFields = "INSERT INTO member_info(FullName, Email, UID, Mobile, BloodGroup) VALUES('";
-        String insertValues = FullName + "','" + Email + "','" + Mobile + "','" + UID + "','" + BloodGroup + "')";
+        String insertFields = "insert into member_info(FullName, Email, UID, Mobile, BloodGroup) values('";
+        String insertValues = FullName + "','" + Email + "','" + UID + "','" + Mobile + "','" + BloodGroup + "')";
         String insertDB = insertFields + insertValues;
 
+        if (FullName.isEmpty() || Email.isEmpty() || Mobile.isEmpty() || UID.isEmpty() || BloodGroup.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all the data in the textfield.");
+            alert.showAndWait();
+
+        } else {
+        executeQuery(insertDB);
+        showList();
+        tfClear();
+        }
         try{
             Statement statement = con.createStatement();
             statement.executeUpdate(insertDB);
@@ -124,9 +264,39 @@ public class Dashboard {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Information");
         alert.setHeaderText("New member added!");
-        alert.setContentText("New member is enlisted to the list.");
+        alert.setContentText("New member added to the list.");
 
         if (alert.showAndWait().get() == ButtonType.OK) {
         }
+    }
+
+    public void setTableView(TableView<table> tableView) {
+        this.tableView = tableView;
+    }
+
+    public void tfClear(){
+        tffullname.clear();
+        tfemail.clear();
+        tfmobile.clear();
+        tfuid.clear();
+        tfbloodgroup.clear();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        showList();
+    }
+
+    public void getItem(javafx.scene.input.MouseEvent mouseEvent) {
+        Integer index;
+        index = tableView.getSelectionModel().getSelectedIndex();
+        if(index <= -1){
+            return;
+        }
+        tffullname.setText(nameColumn.getCellData(index).toString());
+        tfuid.setText(uidColumn.getCellData(index).toString());
+        tfemail.setText(emailColumn.getCellData(index).toString());
+        tfmobile.setText(mobileColumn.getCellData(index).toString());
+        tfbloodgroup.setText(bloodgroupColumn.getCellData(index).toString());
     }
 }

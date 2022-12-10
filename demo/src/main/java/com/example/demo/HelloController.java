@@ -20,6 +20,8 @@ public class HelloController {
     private TextField tfUserName;
     @FXML
     private PasswordField pwPassword;
+    @FXML
+    private Button btncreateacc;
 
     //Exit button action method.
     @FXML
@@ -73,7 +75,18 @@ public class HelloController {
     }
     //Main Dashboard display and close previous.
     private void dashboard() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("dashboard.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("dashboard1.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        Stage newStage = new Stage();
+        newStage.setTitle("CUBCS");
+        newStage.setScene(scene);
+        newStage.show();
+        close();
+    }
+    @FXML
+    //Action of Create Account button taking to signup page
+    private void setBtncreateacc(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("signup.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         Stage newStage = new Stage();
         newStage.setTitle("CUBCS");
