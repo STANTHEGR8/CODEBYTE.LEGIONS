@@ -1,6 +1,6 @@
 # Canadian University of Bangladesh Computer Society Membership Management System
 A simplistic Member Management System in JAVA specifically designed for Canadian University of Bangladesh Computer Soceity.
-Welcome to the Canadian University of Bangladesh Computer Society Membership Management System (CUB-CS-MMS) repository! This project is designed to streamline and automate the management of your computer society's membership.
+This project is designed to streamline and automate the management of your computer society's membership.
 
 ## Table of Contents
 
